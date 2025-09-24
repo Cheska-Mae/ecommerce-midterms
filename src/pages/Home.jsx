@@ -3,6 +3,7 @@ import ProductList from "../components/ProductList.jsx"
 import ProductDetail from "../components/ProductDetail.jsx"
 import SearchBar from "../components/SearchBar.jsx"
 import FilterBar from "../components/FilterBar.jsx"
+import "../App.css"
 
 export default function Home() {
   const [products, setProducts] = useState([])
@@ -41,37 +42,54 @@ export default function Home() {
     }
   }
 
-  // Filter by category
-  let filteredProducts = displayProducts.filter(p => category === "all" || p.category === category)
+  let filteredProducts = displayProducts.filter(
+    p => category === "all" || p.category === category
+  )
 
-  // Sort by price
   if (sortBy === "priceLowHigh") filteredProducts.sort((a, b) => a.price - b.price)
   else if (sortBy === "priceHighLow") filteredProducts.sort((a, b) => b.price - a.price)
 
   return (
-    <div>
-      <h1>{selectedProduct ? selectedProduct.title : "My Market"}</h1>
+    <div className="main-container">
+      {/* Sidebar */}
+      <aside className="sidebar">
+        <h1>My Market</h1>
+        {!selectedProduct && (
+          <>
+            <SearchBar
+              searchTerm={searchTerm}
+              setSearchTerm={setSearchTerm}
+              onSearch={handleSearch}
+            />
+            <FilterBar
+              categories={categories}
+              category={category}
+              setCategory={setCategory}
+              sortBy={sortBy}
+              setSortBy={setSortBy}
+            />
+          </>
+        )}
+        {prevProducts && (
+          <button onClick={handleBack} className="back-btn">
+            Back to All Products
+          </button>
+        )}
+      </aside>
 
-
-      {selectedProduct ? (
-        <div>
-          <button onClick={() => setSelectedProduct(null)} style={{ marginBottom: "20px" }}>Back</button>
-          <ProductDetail product={selectedProduct} />
-        </div>
-      ) : (
-        <>
-          <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} onSearch={handleSearch} />
-          <FilterBar categories={categories} category={category} setCategory={setCategory} sortBy={sortBy} setSortBy={setSortBy} />
-
-          {prevProducts && (
-            <button onClick={handleBack} style={{ margin: "10px 0" }}>
-              Back to All Products
+      {/* Product Section */}
+      <section className="product-section">
+        {selectedProduct ? (
+          <div>
+            <button onClick={() => setSelectedProduct(null)} className="back-btn">
+              Back
             </button>
-          )}
-
+            <ProductDetail product={selectedProduct} />
+          </div>
+        ) : (
           <ProductList products={filteredProducts} onProductClick={setSelectedProduct} />
-        </>
-      )}
+        )}
+      </section>
     </div>
   )
 }

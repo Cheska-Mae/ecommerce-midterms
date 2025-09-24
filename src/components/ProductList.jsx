@@ -2,7 +2,7 @@ import ProductCard from "./ProductCard.jsx"
 
 export default function ProductList({ products, onProductClick }) {
   return (
-    <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "20px" }}>
+    <div className="product-list" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "20px" }}>
       {products.map(product => (
         <ProductCard
           key={product.id}
